@@ -1,0 +1,1937 @@
+<!-- Tilda HTML: CSS/JS inline, images hosted on GitHub Pages as optimized WebP/PNG. -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VSL — Горячий след</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,800;0,900;1,800;1,900&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* ============================================================
+   VSL — 1-Shot Slice Fix
+   ------------------------------------------------------------
+   Typography:
+   - Montserrat — headings, UI, prices, buttons, timer, payments
+   - PT Serif   — body/description paragraphs (product descriptions,
+                  guarantee, totals-save, trust text, available,
+                  long link)
+
+   Layout:
+   - VSL block (eyebrow / title / deck / 16:9 player)
+   - Video teaser — passive red bar at the bottom of the player,
+     appears ~6 min before the video ends. NO button, NO CTA.
+   - Offer section — auto-unfolds below the video at ~3 min
+     remaining. Sticky red 24h timer sits right above the
+     "INSTANT ONLINE ACCESS" gray bar.
+   ============================================================ */
+
+:root {
+
+  --red-700:        #B91C1C;
+  --red-800:        #991B1B;
+  --red-50:         #FEF2F2;
+
+  --paper:          #FFFDF7;
+  --paper-warm:     #FAF6EE;
+  --page-bg:        #ece6d8;
+
+  --ink:            #1A1A1A;
+  --ink-2:          #333333;
+  --ink-3:          #555555;
+  --ink-4:          #777777;
+
+  --shell-border:   #d6cfbe;
+
+  --bar-gray:       #c5c1b8;
+  --pill-gray:      #4a4a4a;
+  --gold-1:         #fde68a;
+  --gold-2:         #fbbf24;
+  --gold-3:         #f59e0b;
+  --gold-4:         #d97706;
+  --gold-shadow:    #92400e;
+  --link-blue:      #1d4ed8;
+
+  --font-headline:  'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-serif:     'PT Serif', Georgia, 'Times New Roman', serif;
+
+  --lh-body:        1.4;
+  --lh-tight:       1.05;
+  --lh-snug:        1.15;
+
+}
+
+.gum-app,
+.gum-app * { margin: 0; padding: 0; box-sizing: border-box; }
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--page-bg);
+}
+
+.gum-app {
+  font-family: var(--font-headline);
+  background: var(--page-bg);
+  color: var(--ink);
+  line-height: var(--lh-body);
+  min-height: 100vh;
+  padding: 32px 16px 64px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.gum-app .shell {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--paper);
+  border: 1px solid var(--shell-border);
+  position: relative;
+}
+
+/* ============================================================
+   VSL BLOCK — full sizes, no aggressive tightening
+   ============================================================ */
+
+.gum-app .vsl-block { padding: 40px 32px 48px; background: transparent; }
+
+.gum-app .vsl-eyebrow {
+  font-family: var(--font-headline);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--ink);
+  text-align: center;
+  text-wrap: balance;
+  margin: 0 auto 14px;
+}
+
+.gum-app .vsl-eyebrow strong { font-weight: 700; }
+
+.gum-app .vsl-eyebrow u {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.gum-app .vsl-title {
+  font-family: var(--font-headline);
+  font-size: 85px;
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.01em;
+  color: var(--red-700);
+  text-align: center;
+  text-wrap: balance;
+  text-transform: uppercase;
+  margin: 0 auto 14px;
+}
+
+.gum-app .vsl-deck {
+  font-family: var(--font-headline);
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  text-align: center;
+  margin: 0 auto 40px;
+}
+
+.gum-app .vsl-deck .vsl-accent { color: var(--red-700); }
+
+.gum-app .vsl-player {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border: 1px solid var(--shell-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.gum-app .vsl-player iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* ============================================================
+   VIDEO TEASER — passive bar that slides down UNDER the video.
+   5-min countdown. Offer auto-unlocks at 0:00.
+   ============================================================ */
+
+.gum-app .vsl-teaser {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  background: var(--red-700);
+  color: #fff;
+  font-family: var(--font-headline);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 0;
+  text-align: center;
+  animation: teaser-slide-down 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  user-select: none;
+}
+
+.gum-app .vsl-teaser[hidden] { display: none; }
+
+.gum-app .vsl-teaser.is-leaving {
+  animation: teaser-slide-up 0.3s ease-in forwards;
+}
+
+@keyframes teaser-slide-down {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes teaser-slide-up {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(-100%); opacity: 0; }
+}
+
+.gum-app .vsl-teaser__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fbbf24;
+  animation: teaser-flame-flicker 1.6s ease-in-out infinite;
+}
+
+@keyframes teaser-flame-flicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50%      { transform: scale(1.12) rotate(2deg); }
+}
+
+.gum-app .vsl-teaser__text { font-size: 13px; }
+
+.gum-app .vsl-teaser__time {
+  font-size: 18px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+  min-width: 88px;
+  text-align: center;
+}
+
+/* ============================================================
+   OFFER BLOCK — only mild spacing tightening, sizes intact
+   ============================================================ */
+
+.gum-app .offer-block {
+  border-top: 3px solid var(--red-700);
+  background: #fff;
+  position: relative;
+  animation: offer-reveal 0.45s ease-out;
+}
+
+.gum-app .offer-block[hidden] { display: none; }
+
+@keyframes offer-reveal {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Sticky 24h timer */
+.gum-app .offer-timer {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--red-700);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 16px;
+  font-family: var(--font-headline);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.gum-app .offer-timer__label { font-size: 14px; }
+
+.gum-app .offer-timer__value {
+  font-size: 24px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 3px 12px;
+  border-radius: 4px;
+  min-width: 116px;
+  text-align: center;
+}
+
+.gum-app .offer-timer.is-warning .offer-timer__value {
+  animation: offer-timer-pulse 1s ease-in-out infinite;
+}
+
+@keyframes offer-timer-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+
+.gum-app .offer-bar {
+  background: var(--bar-gray);
+  color: var(--ink);
+  text-align: center;
+  padding: 11px 16px;
+  font-family: var(--font-headline);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Body — only mildly reduced from 40/56/36 to 36/48/32 */
+.gum-app .offer-body { padding: 36px 48px 12px; background: #fff; }
+
+/* Title — sizes intact (38px), line-height 1.1 (was 1.15) */
+.gum-app .offer-title {
+  font-family: var(--font-headline);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink);
+  text-align: center;
+  text-wrap: balance;
+  margin: 0 0 20px;
+}
+
+.gum-app .offer-title__accent {
+  display: inline-block;
+  color: var(--red-700);
+  font-style: italic;
+  font-weight: 700;
+}
+
+.gum-app .offer-bonus-wrap { text-align: center; margin: 0 0 16px; }
+
+.gum-app .offer-bonus-pill {
+  display: inline-block;
+  background: var(--pill-gray);
+  color: #fff;
+  font-family: var(--font-headline);
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 12px 28px;
+}
+
+/* Guarantee — Montserrat, sizes intact (20px), tighter line-height 1.3 */
+.gum-app .offer-guarantee {
+  font-family: var(--font-headline);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  text-align: center;
+  margin: 0 0 26px;
+}
+
+.gum-app .offer-products { margin: 0 0 12px; }
+
+.gum-app .offer-divider { border: 0; border-top: 1px solid var(--shell-border); margin: 0; }
+
+.gum-app .offer-bonus-header {
+  text-align: center;
+  font-family: var(--font-headline);
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin: 8px 0 4px;
+}
+
+.gum-app .offer-bonus-list {
+  margin: 0 0 20px;
+}
+
+.gum-app .offer-bonus-item {
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--shell-border);
+}
+
+.gum-app .offer-bonus-item:last-child {
+  border-bottom: 0;
+}
+
+.gum-app .offer-bonus-item__check {
+  width: 26px;
+  height: 26px;
+  background: var(--red-700);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 900;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.gum-app .offer-bonus-item__body h4 {
+  font-family: var(--font-headline);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0 0 5px;
+}
+
+.gum-app .offer-bonus-item__body p {
+  font-family: var(--font-headline);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.gum-app .offer-bonus-item__price {
+  font-family: var(--font-headline);
+  font-size: 13px;
+  text-align: right;
+  white-space: nowrap;
+  padding-top: 2px;
+}
+
+.gum-app .offer-bonus-item__price s {
+  color: var(--ink-4);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.gum-app .offer-bonus-item__price strong {
+  color: var(--red-700);
+  font-weight: 900;
+}
+
+@media (max-width: 720px) {
+  .gum-app .offer-bonus-item {
+    grid-template-columns: 26px 1fr;
+    gap: 10px 12px;
+  }
+  .gum-app .offer-bonus-item__price {
+    grid-column: 2;
+    text-align: left;
+    padding-top: 0;
+  }
+  .gum-app .offer-bonus-item__price s,
+  .gum-app .offer-bonus-item__price strong {
+    display: inline;
+  }
+  .gum-app .offer-bonus-item__price strong {
+    margin-left: 6px;
+  }
+}
+
+.gum-app .offer-product {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.gum-app .offer-product__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #fbfbf9;
+  border: 1px solid var(--shell-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.gum-app .offer-product__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gum-app .offer-product__placeholder {
+  text-align: center;
+  font-family: var(--font-headline);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 16px;
+}
+
+.gum-app .offer-product__placeholder span {
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.8;
+}
+
+.gum-app .offer-product__seal {
+  position: absolute;
+  top: -34px;
+  left: -34px;
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.28));
+  z-index: 2;
+}
+
+.gum-app .offer-product__seal-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gum-app .offer-product__seal-ring {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, var(--gold-1) 0%, var(--gold-2) 60%, var(--gold-3) 100%);
+  border: 2px solid var(--gold-shadow);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-headline);
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  text-align: center;
+}
+
+.gum-app .offer-product__seal-ring strong { font-size: 12px; font-weight: 900; }
+
+.gum-app .offer-product__seal-ribbon {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--red-700);
+  color: #fff;
+  font-family: var(--font-headline);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  padding: 2px 6px;
+  white-space: nowrap;
+  border: 1px solid #7f1515;
+}
+
+.gum-app .offer-product__clubbadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
+  color: var(--gold-1);
+  font-family: var(--font-headline);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+  padding: 6px 8px;
+  line-height: 1.2;
+  border: 1px solid var(--gold-3);
+  z-index: 2;
+}
+
+.gum-app .offer-product__clubbadge strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 900;
+  color: #fff;
+  margin: 2px 0;
+}
+
+.gum-app .offer-product__ribbon {
+  position: absolute;
+  top: 12px;
+  right: -6px;
+  background: var(--red-700);
+  color: #fff;
+  display: none;
+  font-family: var(--font-headline);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+.gum-app .offer-product__ribbon::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  right: 0;
+  border-style: solid;
+  border-width: 6px 6px 0 0;
+  border-color: #7f1515 transparent transparent transparent;
+}
+
+.gum-app .offer-product__card {
+  width: 78%;
+  max-width: 200px;
+  aspect-ratio: 1.6 / 1;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+  color: var(--gold-1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 2px solid var(--gold-3);
+  text-align: center;
+  font-family: var(--font-headline);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.gum-app .offer-product__card-top { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--gold-2); margin-bottom: 3px; }
+.gum-app .offer-product__card-mid { font-size: 20px; font-weight: 900; color: #fff; letter-spacing: 0.04em; margin: 3px 0; }
+.gum-app .offer-product__card-bot { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; color: var(--gold-2); margin-top: 3px; }
+
+.gum-app .offer-product__body { min-width: 0; }
+
+.gum-app .offer-product__title {
+  font-family: var(--font-headline);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+/* Description — PT Serif, sizes intact (15px), tighter line-height 1.4 */
+.gum-app .offer-product__desc {
+  font-family: var(--font-headline);
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  margin: 0 0 10px;
+}
+
+.gum-app .offer-product__price {
+  font-family: var(--font-headline);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+
+.gum-app .offer-product__price-label { font-weight: 600; }
+
+.gum-app .offer-product__price-old {
+  color: var(--ink-4);
+  font-weight: 400;
+  text-decoration: line-through;
+  margin: 0 6px;
+}
+
+.gum-app .offer-product__price-new {
+  color: var(--red-700);
+  font-weight: 900;
+  font-size: 21px;
+  margin-left: 4px;
+}
+
+.gum-app .offer-totals { text-align: center; margin: 26px 0 20px; }
+
+.gum-app .offer-totals__value {
+  font-family: var(--font-headline);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+  line-height: 1.1;
+}
+
+.gum-app .offer-totals__value s { text-decoration: line-through; text-decoration-thickness: 2px; }
+
+.gum-app .offer-totals__price {
+  font-family: var(--font-headline);
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--red-700);
+  margin: 0 0 8px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.gum-app .offer-totals__save {
+  font-family: var(--font-headline);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0;
+}
+
+.gum-app .offer-available {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--ink-3);
+  font-family: var(--font-headline);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 18px 0 20px;
+}
+
+.gum-app .offer-available__icon { flex-shrink: 0; color: var(--ink-3); display: block; }
+
+.gum-app .offer-available span {
+  font-family: var(--font-headline);
+}
+
+.gum-app .offer-cta {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  width: min(100%, 560px);
+  max-width: 560px;
+  margin: 8px auto 24px;
+  padding: 12px 18px 12px 12px;
+  background: linear-gradient(180deg, var(--gold-1) 0%, var(--gold-2) 50%, var(--gold-3) 100%);
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--font-headline);
+  border: 2px solid var(--gold-4);
+  box-shadow: 0 5px 0 var(--gold-shadow), 0 8px 18px rgba(0, 0, 0, 0.18);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.gum-app .offer-cta:hover  { transform: translateY(-1px); box-shadow: 0 6px 0 var(--gold-shadow), 0 10px 20px rgba(0, 0, 0, 0.22); }
+.gum-app .offer-cta:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--gold-shadow), 0 5px 10px rgba(0, 0, 0, 0.18); }
+
+.gum-app .offer-cta__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  background: var(--ink);
+  color: var(--gold-1);
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.gum-app .offer-cta__arrow svg {
+  display: block;
+  color: var(--gold-1);
+  width: 34px;
+  height: 34px;
+}
+
+.gum-app .offer-cta__text {
+  font-family: var(--font-headline);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  letter-spacing: 0;
+}
+
+.gum-app .offer-cta-sub {
+  text-align: center;
+  margin-top: 8px;
+  font-family: var(--font-headline);
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+.gum-app .offer-link {
+  display: block;
+  max-width: 640px;
+  margin: 0 auto 28px;
+  text-align: center;
+  color: var(--link-blue);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  font-family: var(--font-headline);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.gum-app .offer-link:hover { color: #1e40af; }
+
+.gum-app .offer-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  max-width: 640px;
+  margin: 30px auto 28px;
+  flex-wrap: nowrap;
+}
+
+.gum-app .offer-trust__seal {
+  position: relative;
+  width: 118px;
+  height: 118px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.22));
+}
+
+.gum-app .offer-trust__seal-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gum-app .offer-trust__seal-ring {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, var(--gold-1) 0%, var(--gold-2) 60%, var(--gold-3) 100%);
+  border: 2px solid var(--gold-shadow);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-headline);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  text-align: center;
+}
+
+.gum-app .offer-trust__seal-ring strong { font-size: 14px; font-weight: 900; }
+
+.gum-app .offer-trust__seal-ribbon {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--red-700);
+  color: #fff;
+  font-family: var(--font-headline);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  white-space: nowrap;
+  border: 1px solid #7f1515;
+}
+
+.gum-app .offer-trust__text {
+  font-family: var(--font-headline);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.24;
+  color: var(--ink);
+  margin: 0;
+  text-align: left;
+  max-width: 470px;
+  letter-spacing: 0;
+}
+
+.gum-app .offer-payments {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 12px 0 0;
+  margin: 6px auto 0;
+  max-width: 100%;
+}
+
+.gum-app .offer-pay {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 34px;
+  background: #fff;
+  border: 1px solid var(--shell-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 6px;
+}
+
+.gum-app .offer-pay img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ============================================================
+   PREVIEW CONTROLS
+   ============================================================ */
+
+.gum-app .preview-controls {
+  margin: 28px 0 0;
+  padding: 16px 18px;
+  background: var(--paper-warm);
+  border: 1px dashed var(--shell-border);
+  border-top: 0;
+}
+
+.gum-app .preview-controls__title {
+  font-family: var(--font-headline);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+.gum-app .preview-controls__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.gum-app .preview-btn {
+  display: inline-block;
+  font-family: var(--font-headline);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border: 1px solid var(--red-700);
+  background: var(--red-700);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.gum-app .preview-btn:hover { background: var(--red-800); }
+
+.gum-app .preview-btn--ghost { background: transparent; color: var(--red-700); }
+.gum-app .preview-btn--ghost:hover { background: var(--red-50); color: var(--red-800); }
+
+.gum-app .preview-controls__timer {
+  margin-top: 12px;
+  text-align: center;
+  font-family: var(--font-headline);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.gum-app .preview-controls__timer strong {
+  color: var(--red-700);
+  font-weight: 900;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (min-width: 721px) and (max-width: 1100px) {
+  .gum-app { padding: 20px 16px; }
+  .gum-app .shell { max-width: 100%; }
+  .gum-app .vsl-block { padding: 32px 32px 40px; }
+}
+
+@media (max-width: 720px) {
+  .gum-app { padding: 16px 0 48px; }
+  .gum-app .shell { border-left: none; border-right: none; }
+  .gum-app .vsl-block { padding: 24px 0 32px; }
+  .gum-app .vsl-eyebrow { font-size: 18px; margin-bottom: 10px; padding: 0 16px; }
+  .gum-app .vsl-title { font-size: 43px; line-height: 1.02; margin-bottom: 10px; max-width: none; }
+  .gum-app .vsl-deck { font-size: 17px; line-height: 1.4; margin-bottom: 24px; padding: 0 16px; }
+
+  .gum-app .vsl-teaser { font-size: 12px; padding: 8px 10px; gap: 7px; flex-wrap: nowrap; }
+  .gum-app .vsl-teaser__text { font-size: 11px; }
+  .gum-app .vsl-teaser__time { font-size: 15px; min-width: 78px; padding: 2px 7px; flex-shrink: 0; }
+
+  .gum-app .offer-body { padding: 24px 20px 10px; }
+  .gum-app .offer-bar { font-size: 12px; padding: 10px 12px; }
+  .gum-app .offer-timer { font-size: 13px; padding: 9px 12px; gap: 8px; }
+  .gum-app .offer-timer__label { font-size: 11px; }
+  .gum-app .offer-timer__value { font-size: 18px; padding: 2px 8px; min-width: 110px; }
+  .gum-app .offer-title { font-size: 26px; margin-bottom: 14px; }
+  .gum-app .offer-bonus-pill { font-size: 14px; padding: 9px 18px; }
+  .gum-app .offer-guarantee { font-size: 16px; margin-bottom: 20px; }
+
+  .gum-app .offer-product { grid-template-columns: 1fr; gap: 16px; padding: 18px 0; }
+  .gum-app .offer-product__media { max-width: 300px; margin: 0 auto; width: 100%; }
+  .gum-app .offer-product__title { font-size: 19px; }
+  .gum-app .offer-product__desc { font-size: 14px; }
+  .gum-app .offer-product__price-new { font-size: 19px; }
+
+  .gum-app .offer-totals { margin: 22px 0 16px; }
+  .gum-app .offer-totals__value { font-size: 24px; }
+  .gum-app .offer-totals__price { font-size: 32px; }
+  .gum-app .offer-totals__save { font-size: 15px; }
+
+  .gum-app .offer-cta {
+    width: min(100%, 520px);
+    max-width: calc(100% - 8px);
+    grid-template-columns: 52px 1fr;
+    gap: 12px;
+    margin: 10px auto 22px;
+    padding: 10px 14px 10px 10px;
+  }
+  .gum-app .offer-cta__arrow { width: 52px; height: 52px; }
+  .gum-app .offer-cta__arrow svg { width: 30px; height: 30px; }
+  .gum-app .offer-cta__text { font-size: 19px; }
+
+  .gum-app .offer-trust {
+    flex-direction: column;
+    gap: 12px;
+    margin: 26px auto 24px;
+    padding: 0 8px;
+  }
+  .gum-app .offer-trust__seal { width: 104px; height: 104px; }
+  .gum-app .offer-trust__seal-ring { font-size: 10px; }
+  .gum-app .offer-trust__seal-ring strong { font-size: 12px; }
+  .gum-app .offer-trust__text {
+    max-width: 100%;
+    font-size: 18px;
+    line-height: 1.28;
+    text-align: center;
+  }
+
+  .gum-app .offer-payments {
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 16px;
+    max-width: 340px;
+  }
+  .gum-app .offer-payments__group {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .gum-app .offer-pay { width: 64px; height: 34px; padding: 6px 7px; }
+}
+
+@media (max-width: 380px) {
+  .gum-app { padding: 12px 0 36px; }
+  .gum-app .vsl-block { padding: 20px 0 28px; }
+  .gum-app .vsl-eyebrow { font-size: 16px; padding: 0 12px; }
+  .gum-app .vsl-title { font-size: 36px; }
+  .gum-app .vsl-deck { font-size: 15px; padding: 0 12px; }
+
+  .gum-app .vsl-teaser { font-size: 11px; padding: 7px 8px; gap: 5px; }
+  .gum-app .vsl-teaser__time { font-size: 13px; min-width: 70px; }
+
+  .gum-app .offer-body { padding: 20px 14px 8px; }
+  .gum-app .offer-title { font-size: 22px; }
+  .gum-app .offer-cta__text { font-size: 17px; }
+  .gum-app .offer-product__price-new { font-size: 18px; }
+  .gum-app .offer-totals__price { font-size: 28px; }
+}
+
+</style>
+</head>
+<body>
+
+  <div class="gum-app vsl-app">
+
+    <div class="shell">
+
+      <section class="vsl-block">
+
+        <p class="vsl-eyebrow">
+          Двое Маркетологов Без Харизмы И Лица В Кадре <strong>Набирают <u>30 000 000 Просмотров</u> Каждые 30 Дней</strong> И Месяцами Делают 500к Пассивных Продаж. Теперь Они Наконец-То Раскрывают&hellip;
+        </p>
+
+        <h1 class="vsl-title">ГОРЯЧИЙ СЛЕД</h1>
+
+        <p class="vsl-deck">
+          Который активирует 50-тысячелетний механизм мозга&hellip; делает ваш контент заразным&hellip;
+          и заставляет людей самих пересказывать его, распространять и приходить к вам с деньгами&hellip;
+          <strong class="vsl-accent">без эфиров, вебинаров и рубля на рекламу</strong>
+        </p>
+
+        <div class="vsl-player">
+          <iframe
+            id="player"
+            src="https://kinescope.io/embed/8dThNY14JXFQcDvo23wTjZ"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope; clipboard-write"
+            frameborder="0"
+            allowfullscreen
+            loading="lazy"
+            title="VSL — Горячий след">
+          </iframe>
+        </div>
+
+        <!-- ========================================================
+             VIDEO TEASER — slides down UNDER the video when the
+             5-min countdown begins. Offer auto-unlocks at 0:00.
+             No button, no CTA — just a passive timer.
+             ======================================================== -->
+        <div class="vsl-teaser" id="vsl-teaser" hidden role="status" aria-live="polite">
+          <span class="vsl-teaser__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+            </svg>
+          </span>
+            <span class="vsl-teaser__text">Доступ к горячему следу откроется через</span>
+          <span class="vsl-teaser__time" id="teaser-time">5:00</span>
+        </div>
+
+      </section>
+
+      <!-- ============================================================
+           OFFER SECTION — auto-unfolds below the VSL block at 3 min
+           before the video ends. Sticky red 24h timer sits right
+           above the "INSTANT ONLINE ACCESS" bar.
+           ============================================================ -->
+      <section class="offer-block" id="offer-block" hidden>
+
+        <div class="offer-timer">
+          <span class="offer-timer__label">ПРЕДЛОЖЕНИЕ ЗАКАНЧИВАЕТСЯ ЧЕРЕЗ</span>
+          <span class="offer-timer__value" id="offer-timer-value">24:00:00</span>
+        </div>
+
+        <div class="offer-bar">ДОСТУП К ГОРЯЧЕМУ СЛЕДУ ОТКРЫТ</div>
+
+        <div class="offer-body">
+
+          <h2 class="offer-title">
+            Вот Всё, Что Вы Получаете, Открыв <em class="offer-title__accent">Горячий След</em> Сегодня
+          </h2>
+
+          <div class="offer-bonus-wrap">
+            <div class="offer-bonus-pill">ВКЛЮЧАЯ 4 БОНУСА НА 12 960 ₽</div>
+          </div>
+
+          <p class="offer-guarantee">
+            ПЛЮС 30-Дневная Гарантия Залета Ветки: Если Ни Один Тред Не Взлетит За 30 Дней, Вернёте Деньги Без Вопросов
+          </p>
+
+          <div class="offer-products">
+
+            <div class="offer-product">
+              <div class="offer-product__media">
+                <img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/hot-track-3.webp" alt="Горячий След 3.0" class="offer-product__image">
+                <div class="offer-product__seal">
+                  <img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/guarantee-badge.webp" alt="30 дней гарантия" class="offer-product__seal-img">
+                </div>
+              </div>
+              <div class="offer-product__body">
+                <h3 class="offer-product__title">Горячий След 3.0: 30 Миллионов Просмотров</h3>
+                <p class="offer-product__desc">50 000 лет эволюции вшили в мозг три реакции: страх за жизнь, жажда статуса, инстинкт размножения. Пост попадает в одну из них, и мозг помечает его как «важно» ещё до того, как человек решил, читать или пролистнуть. Люди физически не могут пролистнуть. Идут в профиль, подписываются, переходят по вашим ссылкам и покупают.</p>
+                <p class="offer-product__price">
+                  <span class="offer-product__price-label">ЦЕНА:</span>
+                  <s class="offer-product__price-old">16 750 ₽</s>
+                  <span class="offer-product__price-new">3 790 ₽</span>
+                </p>
+              </div>
+            </div>
+
+            <hr class="offer-divider">
+
+            <div class="offer-product">
+              <div class="offer-product__media">
+                <img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/hot-track-2.webp" alt="Горячий След 2.0" class="offer-product__image">
+                <div class="offer-product__ribbon">БЕСПЛАТНО</div>
+              </div>
+              <div class="offer-product__body">
+                <h3 class="offer-product__title">Горячий След 2.0: Больше Тем, Глубже Подача</h3>
+                <p class="offer-product__desc">Средняя ступень между скоростью и глубиной. Берёте тему, что цепляет всех, вплетаете экспертизу так, что никто не замечает продажу. Люди думают, что читают интересный пост, а потом сами вам пишут. Пока другие собирают 40 просмотров на «5 советах», аудитория приходит к вам сама.</p>
+                <p class="offer-product__price">
+                  <span class="offer-product__price-label">ЦЕНА:</span>
+                  <s class="offer-product__price-old">3 990 ₽</s>
+                  <span class="offer-product__price-new">БЕСПЛАТНО</span>
+                </p>
+              </div>
+            </div>
+
+            <hr class="offer-divider">
+
+            <div class="offer-product">
+              <div class="offer-product__media">
+                <img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/hot-track-1.webp" alt="Горячий След 1.0" class="offer-product__image">
+                <div class="offer-product__ribbon">БЕСПЛАТНО</div>
+              </div>
+              <div class="offer-product__body">
+                <h3 class="offer-product__title">Горячий След 1.0: Бесконечный Контент</h3>
+                <p class="offer-product__desc">Система заставляет ChatGPT писать как опытный копирайтер, а не как вежливый ассистент. На выходе текст, который звучит как ваш собственный, и каждая единица работает на результат.</p>
+                <p class="offer-product__price">
+                  <span class="offer-product__price-label">ЦЕНА:</span>
+                  <s class="offer-product__price-old">4 990 ₽</s>
+                  <span class="offer-product__price-new">БЕСПЛАТНО</span>
+                </p>
+              </div>
+            </div>
+
+            <hr class="offer-divider">
+
+            <div class="offer-product">
+              <div class="offer-product__media">
+                <img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/first-thread-20-min.webp" alt="Первый тред за 20 минут" class="offer-product__image">
+                <div class="offer-product__ribbon">БЕСПЛАТНО</div>
+              </div>
+              <div class="offer-product__body">
+                <h3 class="offer-product__title">Видеоурок: Первый Тред за 20 Минут</h3>
+                <p class="offer-product__desc">Открываем протокол на экране и показываем каждый шаг, вы повторяете за нами и через 20 минут у вас готов первый тред.</p>
+                <p class="offer-product__price">
+                  <span class="offer-product__price-label">ЦЕНА:</span>
+                  <s class="offer-product__price-old">1 990 ₽</s>
+                  <span class="offer-product__price-new">БЕСПЛАТНО</span>
+                </p>
+              </div>
+            </div>
+
+            <hr class="offer-divider">
+
+            <div class="offer-product">
+              <div class="offer-product__media">
+                <img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/one-thread-four-formats.webp" alt="Один тред на все площадки" class="offer-product__image">
+                <div class="offer-product__ribbon">БЕСПЛАТНО</div>
+              </div>
+              <div class="offer-product__body">
+                <h3 class="offer-product__title">Видеоурок: Один Тред на Все Площадки</h3>
+                <p class="offer-product__desc">Один залетевший тред кормит ваш Telegram, YouTube и рилсы — берёте ту же идею и перекраиваете её под формат каждой площадки.</p>
+                <p class="offer-product__price">
+                  <span class="offer-product__price-label">ЦЕНА:</span>
+                  <s class="offer-product__price-old">1 990 ₽</s>
+                  <span class="offer-product__price-new">БЕСПЛАТНО</span>
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="offer-totals">
+            <p class="offer-totals__value">ОБЩАЯ ЦЕННОСТЬ: <s>16 750 ₽</s></p>
+            <p class="offer-totals__price">ВАША ЦЕНА: ТОЛЬКО 3 790 ₽</p>
+            <p class="offer-totals__save">(Сэкономьте 12 960 ₽ сегодня с этим предложением)</p>
+          </div>
+
+          <p class="offer-available">
+            <svg class="offer-available__icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+              <path d="M3 7l9 6 9-6"></path>
+            </svg>
+            <span>ДОСТУПНО СЕЙЧАС — МГНОВЕННАЯ ОТПРАВКА НА ПОЧТУ</span>
+          </p>
+
+          <a href="https://maccake-hotrack-payments-5c4d.twc1.net/create-payment" class="offer-cta">
+            <span class="offer-cta__arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+            <span class="offer-cta__text">Да, Я Хочу Писать<br>Залетной Контент</span>
+          </a>
+
+          <a href="https://maccake-hotrack-payments-5c4d.twc1.net/create-payment" class="offer-link">
+            Нажмите Здесь, Чтобы Получить Доступ к Протоколу, Который Заставляет Людей Самих Пересказывать Ваш Контент и Приводить Клиентов Без Эфиров и Рекламы (Даже Если Вы Раньше Не Набирали Просмотры)
+          </a>
+
+          <div class="offer-trust">
+            <div class="offer-trust__seal">
+              <img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/guarantee-badge.webp" alt="30 дней гарантия" class="offer-trust__seal-img">
+            </div>
+            <p class="offer-trust__text">30-Дневная Гарантия Залета Ветки: Если Ни Один Тред Не Взлетит За 30 Дней, Вернёте Деньги Без Вопросов</p>
+          </div>
+          <div class="offer-payments">
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/mir.png" alt="МИР"></div>
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/visa.png" alt="Visa"></div>
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/mastercard.png" alt="Mastercard"></div>
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/maestro.png" alt="Maestro"></div>
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/sbp.png" alt="СБП"></div>
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/yapay.png" alt="Я Pay"></div>
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/split.png" alt="Сплит"></div>
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/dolyami.png" alt="Долями"></div>
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/tbank.png" alt="T-Банк"></div>
+            <div class="offer-pay"><img src="https://maccake.github.io/gumirov-tilda-reviews/vsl/ru/sber.png" alt="Сбер"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================================
+           PREVIEW CONTROLS — local demo only, remove in production
+           ============================================================ -->
+      <div class="preview-controls">
+        <p class="preview-controls__title">Панель управления предпросмотром (только для демо)</p>
+        <div class="preview-controls__row">
+          <button type="button" class="preview-btn" id="show-teaser-btn">
+            Показать тизер
+          </button>
+          <button type="button" class="preview-btn preview-btn--ghost" id="reveal-offer-btn">
+            Показать оффер
+          </button>
+          <button type="button" class="preview-btn preview-btn--ghost" id="start-video-btn">
+            Симулировать 2-минутное видео
+          </button>
+          <button type="button" class="preview-btn preview-btn--ghost" id="seek-teaser-btn">
+            Перемотать к тизеру
+          </button>
+          <button type="button" class="preview-btn preview-btn--ghost" id="hide-offer-btn">
+            Скрыть оффер
+          </button>
+          <button type="button" class="preview-btn preview-btn--ghost" id="reset-data-btn">
+            Сбросить данные
+          </button>
+        </div>
+        <p class="preview-controls__timer" id="video-display" hidden>
+          Осталось времени видео: <strong id="video-value">2:00</strong>
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+/* ============================================================
+   VSL — Горячий след
+   ------------------------------------------------------------
+   Таймеры:
+
+   1. TEASER — не самостоятельный setInterval.
+      Это индикатор оставшегося ВИДЕО-времени до раскрытия оффера.
+      Пауза видео = пауза teaser countdown.
+
+   2. OFFER — реальный 24-часовой таймер после раскрытия оффера.
+      Он сохраняется в localStorage и продолжает идти между визитами.
+   ============================================================ */
+
+(function () {
+  'use strict';
+
+  /* ----- Config ----- */
+
+  var VIDEO_URL = 'https://kinescope.io/8dThNY14JXFQcDvo23wTjZ';
+
+  var TEASER_REMAINING_SECONDS = 8 * 60; // тизер за 8 мин до конца
+  var OFFER_REMAINING_SECONDS  = 3 * 60; // оффер за 3 мин до конца
+
+  var DEBUG_TEASER_REMAINING_SECONDS = 10;
+  var DEBUG_OFFER_REMAINING_SECONDS  = 5;
+
+  var PREVIEW_VIDEO_DURATION_SECONDS = 2 * 60;
+  var PREVIEW_TEASER_REMAINING_SECONDS = 30;
+  var PREVIEW_OFFER_REMAINING_SECONDS  = 10;
+
+  var FALLBACK_TEASER_DELAY_SECONDS = 12 * 60;
+  var DEBUG_FALLBACK_TEASER_DELAY_SECONDS = 10;
+
+  var OFFER_EXPIRY_SECONDS = 24 * 60 * 60; // 24 h
+  var URGENCY_THRESHOLD    = 3 * 60 * 60;  // pulse in last 3 h
+
+  var STORAGE_KEY_OFFER = 'vsl_offer_expiry_v2';
+  var STORAGE_KEY_RESET_PLAYBACK = 'vsl_reset_playback_once';
+
+  /* ----- DOM ----- */
+
+  var teaser        = document.getElementById('vsl-teaser');
+  var teaserTimeEl  = document.getElementById('teaser-time');
+  var offer         = document.getElementById('offer-block');
+  var offerTimerEl  = document.getElementById('offer-timer-value');
+  var offerTimerBar = offer ? offer.querySelector('.offer-timer') : null;
+  var playerShell   = document.querySelector('.vsl-player');
+
+  var showTeaserBtn = document.getElementById('show-teaser-btn');
+  var revealBtn     = document.getElementById('reveal-offer-btn');
+  var hideOfferBtn  = document.getElementById('hide-offer-btn');
+  var resetDataBtn  = document.getElementById('reset-data-btn');
+  var seekTeaserBtn = document.getElementById('seek-teaser-btn');
+  var videoBtn      = document.getElementById('start-video-btn');
+  var videoDisplay  = document.getElementById('video-display');
+  var videoValueEl  = document.getElementById('video-value');
+
+  /* ----- State ----- */
+
+  var debugMode = window.location.hash.indexOf('debug') !== -1;
+  var currentThresholds = getDefaultThresholds();
+
+  var stage = 'idle'; // idle | teaser | offer
+  var duration = 0;
+  var lastVideoTime = 0;
+  var pointerInsidePlayer = false;
+
+  var offerInterval = null;
+  var previewInterval = null;
+  var fallbackHandle = null;
+  var fallbackMode = null;
+  var fallbackStarted = false;
+  var kinescopePlayer = null;
+
+  /* ----- Helpers ----- */
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function formatMMSS(totalSeconds) {
+    var s = Math.max(0, Math.ceil(totalSeconds));
+    var m = Math.floor(s / 60);
+    return m + ':' + pad(s % 60);
+  }
+
+  function formatHHMMSS(totalSeconds) {
+    var s = Math.max(0, Math.floor(totalSeconds));
+    var h  = Math.floor(s / 3600);
+    var m  = Math.floor((s % 3600) / 60);
+    var ss = s % 60;
+    return pad(h) + ':' + pad(m) + ':' + pad(ss);
+  }
+
+  function log(message) {
+    if (debugMode && window.console) console.log('[VSL] ' + message);
+  }
+
+  function getDefaultThresholds() {
+    return debugMode
+      ? {
+          teaserRemaining: DEBUG_TEASER_REMAINING_SECONDS,
+          offerRemaining: DEBUG_OFFER_REMAINING_SECONDS
+        }
+      : {
+          teaserRemaining: TEASER_REMAINING_SECONDS,
+          offerRemaining: OFFER_REMAINING_SECONDS
+        };
+  }
+
+  function getTriggerTimes(videoDuration, thresholds) {
+    var teaserAt = Math.max(0, videoDuration - thresholds.teaserRemaining);
+    var offerAt = Math.max(teaserAt, videoDuration - thresholds.offerRemaining);
+    return { teaserAt: teaserAt, offerAt: offerAt };
+  }
+
+  /* ----- Storage ----- */
+
+  function getOfferExpiry() {
+    try {
+      var stored = localStorage.getItem(STORAGE_KEY_OFFER);
+      if (stored) {
+        var ts = parseInt(stored, 10);
+        if (!isNaN(ts) && ts > Date.now() && ts < Date.now() + 25 * 60 * 60 * 1000) {
+          return ts;
+        }
+      }
+    } catch (e) { /* localStorage unavailable */ }
+    return null;
+  }
+
+  function setOfferExpiry(ts) {
+    try { localStorage.setItem(STORAGE_KEY_OFFER, String(ts)); }
+    catch (e) { /* ignore */ }
+  }
+
+  function clearOfferExpiry() {
+    try { localStorage.removeItem(STORAGE_KEY_OFFER); }
+    catch (e) { /* ignore */ }
+  }
+
+  function markPlaybackReset() {
+    try { sessionStorage.setItem(STORAGE_KEY_RESET_PLAYBACK, '1'); }
+    catch (e) { /* ignore */ }
+  }
+
+  function consumePlaybackReset() {
+    try {
+      var shouldReset = sessionStorage.getItem(STORAGE_KEY_RESET_PLAYBACK) === '1';
+      sessionStorage.removeItem(STORAGE_KEY_RESET_PLAYBACK);
+      return shouldReset;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /* ----- Teaser UI ----- */
+
+  function showTeaser() {
+    if (!teaser || stage === 'offer') return;
+    teaser.hidden = false;
+    stage = 'teaser';
+  }
+
+  function hideTeaser() {
+    if (!teaser || teaser.hidden) return;
+    teaser.classList.add('is-leaving');
+    setTimeout(function () {
+      teaser.hidden = true;
+      teaser.classList.remove('is-leaving');
+    }, 300);
+  }
+
+  function updateTeaserDisplay(remaining) {
+    if (!teaserTimeEl) return;
+    teaserTimeEl.textContent = remaining > 0 ? formatMMSS(remaining) : '0:00';
+  }
+
+  /* ----- Offer timer ----- */
+
+  function startOfferTimer() {
+    var expiry = getOfferExpiry();
+    if (!expiry) {
+      expiry = Date.now() + OFFER_EXPIRY_SECONDS * 1000;
+      setOfferExpiry(expiry);
+    }
+    tickOffer(expiry);
+    if (offerInterval) clearInterval(offerInterval);
+    offerInterval = setInterval(function () { tickOffer(expiry); }, 1000);
+  }
+
+  function stopOfferTimer() {
+    if (offerInterval) {
+      clearInterval(offerInterval);
+      offerInterval = null;
+    }
+  }
+
+  function tickOffer(expiry) {
+    var remaining = Math.max(0, Math.floor((expiry - Date.now()) / 1000));
+    if (offerTimerEl) {
+      offerTimerEl.textContent = remaining > 0
+        ? formatHHMMSS(remaining)
+        : '0:00:00 — EXPIRED';
+    }
+    if (offerTimerBar) {
+      offerTimerBar.classList.toggle('is-warning', remaining > 0 && remaining <= URGENCY_THRESHOLD);
+    }
+    if (remaining <= 0) stopOfferTimer();
+  }
+
+  /* ----- Offer section ----- */
+
+  function revealOffer(options) {
+    options = options || {};
+    if (!offer || stage === 'offer') return;
+
+    stage = 'offer';
+    offer.hidden = false;
+    hideTeaser();
+    stopFallbackTimer();
+    startOfferTimer();
+
+    if (options.scroll !== false) {
+      requestAnimationFrame(function () {
+        try { offer.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        catch (e) { offer.scrollIntoView(); }
+      });
+    }
+  }
+
+  function hideOffer() {
+    if (!offer) return;
+    offer.hidden = true;
+    stage = 'idle';
+    stopOfferTimer();
+  }
+
+  function forceHideTeaser() {
+    if (!teaser) return;
+    teaser.hidden = true;
+    teaser.classList.remove('is-leaving');
+  }
+
+  /* ----- Video-driven teaser logic ----- */
+
+  function syncVideoProgress(currentTime, videoDuration, thresholds) {
+    if (stage === 'offer') return;
+    if (!videoDuration || videoDuration <= 0) return;
+
+    stopFallbackTimer();
+    duration = videoDuration;
+    lastVideoTime = Math.max(0, currentTime || 0);
+    currentThresholds = thresholds || currentThresholds;
+
+    var triggers = getTriggerTimes(duration, currentThresholds);
+
+    if (lastVideoTime >= triggers.offerAt) {
+      log('Оффер открыт по video-time: ' + Math.floor(lastVideoTime) + 's / ' + Math.floor(duration) + 's');
+      revealOffer();
+      return;
+    }
+
+    if (lastVideoTime >= triggers.teaserAt) {
+      showTeaser();
+      updateTeaserDisplay(triggers.offerAt - lastVideoTime);
+      log('Тизер: осталось ' + Math.ceil(triggers.offerAt - lastVideoTime) + 's до оффера');
+    }
+  }
+
+  /* ----- Fallback ----- */
+
+  function startFallbackWatch() {
+    if (stage === 'offer' || fallbackStarted) return;
+    fallbackStarted = true;
+    fallbackMode = 'waiting';
+
+    var delay = (debugMode ? DEBUG_FALLBACK_TEASER_DELAY_SECONDS : FALLBACK_TEASER_DELAY_SECONDS) * 1000;
+    log('Fallback watch запущен: тизер через ' + Math.round(delay / 1000) + 's, если SDK не отдаст video-time');
+
+    fallbackHandle = setTimeout(function () {
+      fallbackHandle = null;
+      if (stage === 'offer' || duration > 0) return;
+      startFallbackCountdown();
+    }, delay);
+  }
+
+  function startFallbackCountdown() {
+    if (stage === 'offer') return;
+    stopFallbackTimer();
+    fallbackStarted = true;
+    fallbackMode = 'countdown';
+
+    var remaining = Math.max(0, currentThresholds.teaserRemaining - currentThresholds.offerRemaining);
+    log('Запущен fallback teaser countdown');
+    showTeaser();
+    updateTeaserDisplay(remaining);
+
+    fallbackHandle = setInterval(function () {
+      remaining -= 1;
+      updateTeaserDisplay(remaining);
+      if (remaining <= 0) {
+        stopFallbackTimer();
+        revealOffer();
+      }
+    }, 1000);
+  }
+
+  function stopFallbackTimer() {
+    if (fallbackHandle) {
+      if (fallbackMode === 'waiting') clearTimeout(fallbackHandle);
+      if (fallbackMode === 'countdown') clearInterval(fallbackHandle);
+      fallbackHandle = null;
+    }
+    fallbackMode = null;
+  }
+
+  function stopPreviewSimulation() {
+    if (previewInterval) {
+      clearInterval(previewInterval);
+      previewInterval = null;
+    }
+    if (videoBtn) {
+      videoBtn.disabled = false;
+      videoBtn.textContent = 'Симулировать 2-минутное видео';
+    }
+    if (videoDisplay) videoDisplay.hidden = true;
+    if (videoValueEl) videoValueEl.textContent = formatMMSS(PREVIEW_VIDEO_DURATION_SECONDS);
+  }
+
+  function resetPlayerPlayback() {
+    if (!kinescopePlayer) return;
+
+    var reset = Promise.resolve();
+    if (kinescopePlayer.pause) {
+      reset = reset.then(function () {
+        return kinescopePlayer.pause();
+      }).catch(function () {});
+    }
+    if (kinescopePlayer.seekTo) {
+      reset = reset.then(function () {
+        return kinescopePlayer.seekTo(0);
+      }).catch(function () {});
+    }
+  }
+
+  function resetDemoState(options) {
+    options = options || {};
+    stopPreviewSimulation();
+    stopFallbackTimer();
+    stopOfferTimer();
+    clearOfferExpiry();
+    if (options.resetPlayback !== false) {
+      markPlaybackReset();
+      resetPlayerPlayback();
+    }
+
+    stage = 'idle';
+    lastVideoTime = 0;
+    fallbackStarted = false;
+    fallbackMode = null;
+    currentThresholds = getDefaultThresholds();
+
+    if (offer) offer.hidden = true;
+    forceHideTeaser();
+    updateTeaserDisplay(currentThresholds.teaserRemaining - currentThresholds.offerRemaining);
+    if (offerTimerEl) offerTimerEl.textContent = '24:00:00';
+    if (offerTimerBar) offerTimerBar.classList.remove('is-warning');
+  }
+
+  function seekToTeaserPoint() {
+    resetDemoState({ resetPlayback: false });
+
+    function syncAtTeaser(videoDuration) {
+      duration = videoDuration || duration || 24 * 60;
+      var triggers = getTriggerTimes(duration, currentThresholds);
+      syncVideoProgress(triggers.teaserAt, duration, currentThresholds);
+      if (videoDisplay) videoDisplay.hidden = false;
+      if (videoValueEl) videoValueEl.textContent = formatMMSS(duration - triggers.teaserAt);
+      return triggers.teaserAt;
+    }
+
+    if (!kinescopePlayer) {
+      syncAtTeaser(24 * 60);
+      return;
+    }
+
+    var durationPromise = duration
+      ? Promise.resolve(duration)
+      : kinescopePlayer.getDuration
+        ? kinescopePlayer.getDuration()
+        : Promise.resolve(24 * 60);
+
+    durationPromise
+      .then(function (videoDuration) {
+        duration = videoDuration || duration || 24 * 60;
+        var triggers = getTriggerTimes(duration, currentThresholds);
+        if (!kinescopePlayer.seekTo) {
+          syncAtTeaser(duration);
+          return null;
+        }
+        return kinescopePlayer.seekTo(triggers.teaserAt).then(function () {
+          syncAtTeaser(duration);
+        });
+      })
+      .catch(function () {
+        syncAtTeaser(24 * 60);
+      });
+  }
+
+  /* ----- Kinescope integration ----- */
+
+  window.onKinescopeIframeAPIReady = function (playerFactory) {
+    log('Kinescope SDK готов');
+
+    playerFactory
+      .create('player', {
+        url: VIDEO_URL,
+        size: { width: '100%', height: '100%' }
+      })
+      .then(function (player) {
+        kinescopePlayer = player;
+        log('Плеер создан');
+
+        player.once(player.Events.Loaded, function (event) {
+          duration = event && event.data && event.data.duration ? event.data.duration : duration;
+          if (!duration && player.getDuration) {
+            player.getDuration().then(function (value) {
+              duration = value || duration;
+              log('Duration через getDuration: ' + duration);
+            }).catch(function () {});
+          }
+          if (duration) log('Duration: ' + duration);
+          if (consumePlaybackReset()) resetPlayerPlayback();
+        });
+
+        player.on(player.Events.Play, function () {
+          log('Play');
+          startFallbackWatch();
+        });
+
+        player.on(player.Events.Playing, function () {
+          log('Playing');
+          startFallbackWatch();
+        });
+
+        player.on(player.Events.Pause, function () {
+          log('Pause');
+        });
+
+        player.on(player.Events.TimeUpdate, function (event) {
+          if (!event || !event.data) return;
+
+          var currentTime = event.data.currentTime || 0;
+          if (!duration && event.data.percent > 0) {
+            duration = currentTime / (event.data.percent / 100);
+          }
+
+          if (duration) {
+            syncVideoProgress(currentTime, duration, currentThresholds);
+          }
+        });
+
+        player.on(player.Events.Ended, function () {
+          log('Ended');
+          revealOffer();
+        });
+
+        player.on(player.Events.Error, function (event) {
+          if (window.console) console.error('[VSL] Kinescope player error:', event && event.data);
+        });
+      })
+      .catch(function (err) {
+        if (window.console) console.error('[VSL] Kinescope SDK error:', err);
+      });
+  };
+
+  /* ----- Preview controls ----- */
+
+  function startPreviewSimulation() {
+    if (previewInterval) return;
+    if (videoDisplay) videoDisplay.hidden = false;
+    if (videoBtn) {
+      videoBtn.disabled = true;
+      videoBtn.textContent = 'Видео играет…';
+    }
+
+    stage = stage === 'offer' ? 'offer' : 'idle';
+    duration = PREVIEW_VIDEO_DURATION_SECONDS;
+    currentThresholds = {
+      teaserRemaining: PREVIEW_TEASER_REMAINING_SECONDS,
+      offerRemaining: PREVIEW_OFFER_REMAINING_SECONDS
+    };
+
+    var elapsed = 0;
+    if (videoValueEl) videoValueEl.textContent = formatMMSS(duration);
+
+    previewInterval = setInterval(function () {
+      elapsed += 1;
+      if (videoValueEl) videoValueEl.textContent = formatMMSS(duration - elapsed);
+      syncVideoProgress(elapsed, duration, currentThresholds);
+
+      if (elapsed >= duration || stage === 'offer') {
+        clearInterval(previewInterval);
+        previewInterval = null;
+        if (videoBtn) {
+          videoBtn.disabled = false;
+          videoBtn.textContent = 'Симулировать 2-минутное видео';
+        }
+      }
+    }, 1000);
+  }
+
+  if (showTeaserBtn) {
+    showTeaserBtn.addEventListener('click', function () {
+      if (stage === 'offer') return;
+      startFallbackCountdown();
+    });
+  }
+
+  if (revealBtn) {
+    revealBtn.addEventListener('click', function () {
+      revealOffer();
+    });
+  }
+
+  if (videoBtn) {
+    videoBtn.addEventListener('click', startPreviewSimulation);
+  }
+
+  if (hideOfferBtn) {
+    hideOfferBtn.addEventListener('click', function () {
+      resetDemoState();
+    });
+  }
+
+  if (resetDataBtn) {
+    resetDataBtn.addEventListener('click', resetDemoState);
+  }
+
+  if (seekTeaserBtn) {
+    seekTeaserBtn.addEventListener('click', seekToTeaserPoint);
+  }
+
+  if (playerShell) {
+    playerShell.addEventListener('pointerenter', function () {
+      pointerInsidePlayer = true;
+    });
+    playerShell.addEventListener('pointerleave', function () {
+      pointerInsidePlayer = false;
+    });
+    playerShell.addEventListener('mouseenter', function () {
+      pointerInsidePlayer = true;
+    });
+    playerShell.addEventListener('mouseleave', function () {
+      pointerInsidePlayer = false;
+    });
+    playerShell.addEventListener('pointerdown', startFallbackWatch, { once: true });
+    playerShell.addEventListener('touchstart', startFallbackWatch, { once: true });
+  }
+
+  window.addEventListener('blur', function () {
+    if (pointerInsidePlayer) startFallbackWatch();
+  });
+
+  /* ----- Restore on page load ----- */
+
+  (function restoreOffer() {
+    var expiry = getOfferExpiry();
+    if (expiry && offer) {
+      stage = 'offer';
+      offer.hidden = false;
+      hideTeaser();
+      tickOffer(expiry);
+      stopOfferTimer();
+      offerInterval = setInterval(function () { tickOffer(expiry); }, 1000);
+    }
+  })();
+
+  /* ----- Public API ----- */
+
+  window.VSLOffer = {
+    showTeaser: function () {
+      if (stage === 'offer') return;
+      showTeaser();
+      updateTeaserDisplay(TEASER_REMAINING_SECONDS - OFFER_REMAINING_SECONDS);
+    },
+    sync: syncVideoProgress,
+    reveal: revealOffer,
+    hide: hideOffer,
+    debugState: function () {
+      return {
+        stage: stage,
+        duration: duration,
+        lastVideoTime: lastVideoTime,
+        hasPlayer: !!kinescopePlayer,
+        canSeek: !!(kinescopePlayer && kinescopePlayer.seekTo),
+        canPause: !!(kinescopePlayer && kinescopePlayer.pause)
+      };
+    }
+  };
+
+})();
+
+</script>
+  <script async defer src="https://player.kinescope.io/latest/iframe.player.js"></script>
+</body>
+</html>
